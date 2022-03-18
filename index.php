@@ -1,32 +1,41 @@
 <?php
-    $idFixo = 1;
-    $loginFixo = "teste";
-    $senhaFixo = 123;
+    require_once 'model/db_connect.php';
+
+    //$idFixo = 1;
+    //$loginFixo = "teste";
+    //$senhaFixo = 123;
     
     session_start();
     $_SESSION['acesso'] = NULL;
 
     if (isset($_POST['enviar'])):
-    
+        
         $erros = array();
-        $login = $_POST['login'];
-        $senha = $_POST['senha'];
-    
+        $login = mysqli_escape_string($connect,$_POST['login']);
+        $senha = mysqli_escape_string($connect,$_POST['senha']);
+
         if (empty($senha) or empty($login)):
             $erros[] = "<p>Todos os campos devem ser preenchidos. <p>";
         else:
-            if ($login == $loginFixo):
-                if ($senha == $senhaFixo):
+            $senha = md5($senha);
+            $buscaUsuario = "SELECT * FROM usuarios WHERE login = '$login' ";
+            $resultadoBusca = mysqli_query($connect, $buscaUsuario);
+
+            if (mysqli_num_rows($resultadoBusca)>0):
+                $buscaUsuarioSenha = "SELECT * FROM usuarios WHERE login = '$login' and pass = '$senha'";
+                $resultadoBusca = mysqli_query($connect,$buscaUsuarioSenha);
+                $dadosUsuario = mysqli_fetch_array($resultadoBusca);
+                
+                if (mysqli_num_rows($resultadoBusca) == 1):
                     $_SESSION['acesso'] = TRUE;
-                    $_SESSION['id_usuario'] = $idFixo;
+                    $_SESSION['id_user'] = $dadosUsuario['id_user'];
                     header('Location: view/pag/home.php');
-    
                 else:
                     $erros[] = "<p>Login correto porém senha inválida. <p>";
                 endif;
-        
+
             else:
-                $erros[] = "<p>Login não existente. </p>";
+                $erros[] = "<p>Login inexistente. </p>";
             endif;
         endif;
     endif;
