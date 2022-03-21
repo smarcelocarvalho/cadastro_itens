@@ -20,6 +20,7 @@ echo "BEM-VINDO";
 <body>
 
 <a href="/index.php">LOGOUT</a>
+<a href="cadastro.php">CADASTRO</a>
     
 </body>
 </html>

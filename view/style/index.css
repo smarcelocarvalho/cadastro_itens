@@ -36,7 +36,7 @@ input {
     border: 1px rgb(0, 89, 92) solid;
     border-radius: 1em;
     padding-left: 20px;
-    color: gray;
+    color: rgb(0, 89, 92);
 }
 
 input:focus {
