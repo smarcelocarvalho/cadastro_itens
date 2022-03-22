@@ -1,4 +1,5 @@
 <?php
+require_once '../../model/db_connect.php';
 
 session_start();
 
@@ -7,9 +8,42 @@ if(!isset($_SESSION['acesso'])):
     header('Location: /index.php');
 endif;
 
-if(isset($_POST['enviar'])){
-    
-}
+if(isset($_POST['enviar'])):
+    $erros = array();
+    if(!empty($_POST['nome_livro'])):
+        if(!empty($_POST['editora_livro'])):
+            if(!empty($_POST['autor_livro'])):
+                if(!empty($_POST['genero_livro'])):
+                    if(!empty($_POST['data_publicacao'])):
+                        if ($_POST['data_publicacao'] > date('Y-m-d')):
+                            $erros[] = "<li>Campo data de publicação não possível.</li>";
+                        else:
+                            $nomeLivro = $_POST['nome_livro'];
+                            $editoraLivro = $_POST['editora_livro'];
+                            $autorLivro = $_POST['autor_livro'];
+                            $generoLivro = $_POST['genero_livro'];
+                            $dataPublicacao = $_POST['data_publicacao'];
+                            $insereRegistro = "INSERT INTO livros (nome_livro, editora_livro, autor_livro, genero_livro, data_publicacao ) VALUES (
+                                '$nomeLivro','$editoraLivro','$autorLivro','$generoLivro','$dataPublicacao')";
+                            mysqli_query($connect,$insereRegistro);
+                            echo mysqli_error($connect);
+                        endif;
+                    else:
+                        $erros[] = "<li>Campo data de publicação não preeenchido.</li>";
+                    endif;
+                else:
+                    $erros[] = "<li>Campo genêro do livro não preeenchido.</li>";
+                endif;
+            else:
+                $erros[] = "<li>Campo autor do livro não preeenchido.</li>";
+            endif;
+        else:
+            $erros[] = "<li>Campo editora do livro não preeenchido.</li>";
+        endif;
+    else:
+        $erros[] = "<li>Campo nome do livro não preeenchido. <li>";
+    endif;
+endif;
 
 ?>
 
@@ -32,7 +66,7 @@ if(isset($_POST['enviar'])){
             </div>
         </div>
         <div class="inferior_pagina">
-            <form action="<?php echo $_SESSION['PHP_SELF'] ?>" method="POST" class="formulario">
+            <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST" class="formulario">
                 <input type="text" name="nome_livro" class="input nome_livro" placeholder="Nome">
                 <input type="text" name="editora_livro" class="input editora_livro" placeholder="Editora">
                 <input type="text" name="autor_livro" class="input autor_livro" placeholder="Autor">
@@ -42,5 +76,12 @@ if(isset($_POST['enviar'])){
             </form>
         </div>
     </div>
+    <?php
+    if(!empty($erros)):
+        foreach ($erros as $erro):
+            echo $erro;
+        endforeach;
+    endif;
+    ?>
 </body>
 </html>
