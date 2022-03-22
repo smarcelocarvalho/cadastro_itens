@@ -1,74 +1,111 @@
-html {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 16px;
-}
-body {
-    padding: 0px;
-    margin: 0px;
-}
+/* Página home.php layout grid */
 
-.pagina_inteira {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    margin: 0px;
+    padding: 0px;
 }
-.superior_pagina {
-    box-sizing: border-box;
-    width: 100vw;
-    height: 15vh;
-    padding: 10px;
-    background-color: rgb(0, 89, 92);
-    display: flex;
-    flex-direction: column;
-}
-div.header {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+a:link.pagina {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 20px;
 }
 a:link, a:visited, a:active {
     text-decoration: none;
     color: white;
 }
-h1{
-    margin-top: 40px;
+.cabecalho {
+    grid-area: cabecalho;
+    background-color: rgb(41, 41, 41);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.conteudo {
+    grid-area: conteudo;
+}
+.rodape {
+    grid-area: rodape;
+    background-color: rgb(0, 0, 0);
+}
+p.texto_rodape {
     color: white;
-    font-size: 25px;
-    text-align: center;
+    text-align: right;
+    font-weight: bold;
+    margin-right: 20px;
+    font-size: 12px;
 }
-.inferior_pagina {
+div.grid {
+    height: 100vh;
     width: 100vw;
-    height: 85vh;
-    background-color: rgb(255, 254, 254);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(80px, 1fr) 8.5fr minmax(40px, 0.5fr);
+    grid-template-areas: 
+    "cabecalho"
+    "conteudo"
+    "rodape";
 }
+/* DIV pagina home distinada a conteudo */
+div.banner {
+    background-image: url("../image/banner.jpg");
+    background-size: cover;
+}
+
+/* Pagina de cadastro */
 .formulario {
-    width: 90vw;
-    margin: 20px auto;
+    width: 80vw;
+    margin: 10vh auto;
     display: flex;
     flex-direction: column;
 }
-
 .input {
     box-sizing: border-box;
-    padding-left: 15px;
+    padding: 15px;
     height: 50px;
     width: 400px;
     margin: 10px auto;
     border-radius: 1em;
-    border: 1px solid rgb(0, 89, 92);
+    border: 1px solid rgb(41, 41, 41);
 }
-
 input:focus {
     outline: none;    
 }
-
 input::placeholder {
-    color: rgb(0, 89, 92);
-    font-size: 16px;
+    color: rgb(41, 41, 41);
+    font-size: 14px;
 }
-
 .btn_enviar {
-    background-color: rgb(0, 89, 92);
+    background-color: rgb(41, 41, 41);
     color: white;
     font-weight: 600;
+}
+.btn_enviar:hover {
+    background-color: rgb(31, 31, 31);
+}
+
+/* Pagina de livros (registros) */
+div.tabela {
+    width: 60vw;
+    margin: 50px auto;
+    background-color: rgb(255, 255, 255);
+    border-radius: 1em;
+    border: 1px solid black;
+}
+table.registros {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+}
+th {
+    text-align: left;
+    border: 2px solid rgb(170, 170, 170);
+    border-radius: 1em;
+    padding: 15px;
+}
+td {
+    padding: 10px;
+    border: 1px solid rgb(170, 170, 170);
+    border-radius: 1em;
 }

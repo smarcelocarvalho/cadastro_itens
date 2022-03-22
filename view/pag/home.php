@@ -1,4 +1,5 @@
 <?php
+require_once '../../model/db_connect.php';
 
 session_start();
 
@@ -6,21 +7,23 @@ if(!isset($_SESSION['acesso'])):
     session_destroy();
     header('Location: /index.php');
 endif;
-
-echo "BEM-VINDO";
-
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Página Inicial</title>
+    <title>Livraria</title>
+    <link rel="stylesheet" href="../style/home.css">
 </head>
 <body>
+    <div class="container grid">
+    <?php include_once 'cabecalho.php'; ?>
 
-<a href="/index.php">LOGOUT</a>
-<a href="cadastro.php">CADASTRO</a>
-    
+    <div class="conteudo banner">
+    </div>
+
+    <?php include_once 'rodape.php'; ?>
+    </div>
 </body>
 </html>

@@ -8,28 +8,32 @@ if(!isset($_SESSION['acesso'])):
     header('Location: /index.php');
 endif;
 
+// Define fuso horário de brasilia
+date_default_timezone_set('America/Sao_Paulo');
+
 if(isset($_POST['enviar'])):
     $erros = array();
     if(!empty($_POST['nome_livro'])):
         if(!empty($_POST['editora_livro'])):
             if(!empty($_POST['autor_livro'])):
                 if(!empty($_POST['genero_livro'])):
-                    if(!empty($_POST['data_publicacao'])):
-                        if ($_POST['data_publicacao'] > date('Y-m-d')):
-                            $erros[] = "<li>Campo data de publicação não possível.</li>";
-                        else:
+                    if(!empty($_POST['ano_publicacao'])):
+                            $anoPublicacao = intval($_POST['ano_publicacao']);
+                        if ($_POST['ano_publicacao'] <= date('Y') && gettype($anoPublicacao) == "integer"):
                             $nomeLivro = $_POST['nome_livro'];
                             $editoraLivro = $_POST['editora_livro'];
                             $autorLivro = $_POST['autor_livro'];
                             $generoLivro = $_POST['genero_livro'];
-                            $dataPublicacao = $_POST['data_publicacao'];
-                            $insereRegistro = "INSERT INTO livros (nome_livro, editora_livro, autor_livro, genero_livro, data_publicacao ) VALUES (
-                                '$nomeLivro','$editoraLivro','$autorLivro','$generoLivro','$dataPublicacao')";
+                            $criado = date('Y-m-d H:i:s');
+                            $insereRegistro = "INSERT INTO livros (nome_livro, editora_livro, autor_livro, genero_livro, ano_publicacao, criado, modificado ) VALUES (
+                                '$nomeLivro','$editoraLivro','$autorLivro','$generoLivro','$anoPublicacao', '$criado', '$criado')";
                             mysqli_query($connect,$insereRegistro);
-                            echo mysqli_error($connect);
+                            
+                        else:
+                            $erros[] = "<li>Campo ano de publicação não possível.</li>";
                         endif;
                     else:
-                        $erros[] = "<li>Campo data de publicação não preeenchido.</li>";
+                        $erros[] = "<li>Campo ano de publicação não preeenchido.</li>";
                     endif;
                 else:
                     $erros[] = "<li>Campo genêro do livro não preeenchido.</li>";
@@ -51,30 +55,25 @@ endif;
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastro de Livros</title>
+    <title>Cadastro livros</title>
     <link rel="stylesheet" href="../style/home.css">
 </head>
 <body>
-    <div class="pagina_inteira">
-        <div class="superior_pagina">
-            <div class="header">
-                <a href="home.php">HOME</a>
-                <a href="/index.php">LOGOUT</a>
-            </div>
-            <div class="titulo">
-                <h1>CADASTRAR LIVROS</h1>
-            </div>
-        </div>
-        <div class="inferior_pagina">
-            <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST" class="formulario">
-                <input type="text" name="nome_livro" class="input nome_livro" placeholder="Nome">
-                <input type="text" name="editora_livro" class="input editora_livro" placeholder="Editora">
-                <input type="text" name="autor_livro" class="input autor_livro" placeholder="Autor">
-                <input type="text" name="genero_livro" class="input genero_livro" placeholder="Gênero">
-                <input type="date" name="data_publicacao" class="input data_publicacao" placeholder="Publicação">
-                <input type="submit" value="CADASTRAR" class="input btn_enviar" name="enviar">
-            </form>
-        </div>
+    <div class="container grid">
+    <?php include_once 'cabecalho.php'; ?>
+
+    <div class="conteudo banner">
+        <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST" class="formulario">
+            <input type="text" name="nome_livro" class="input nome_livro" placeholder="Título">
+            <input type="text" name="editora_livro" class="input editora_livro" placeholder="Editora">
+            <input type="text" name="autor_livro" class="input autor_livro" placeholder="Autor">
+            <input type="text" name="genero_livro" class="input genero_livro" placeholder="Gênero">
+            <input type="text" name="ano_publicacao" class="input ano_publicacao" placeholder="Ano de Publicação">
+            <input type="submit" value="CADASTRAR" class="input btn_enviar" name="enviar">
+        </form>
+    </div>
+
+    <?php include_once 'rodape.php'; ?>
     </div>
     <?php
     if(!empty($erros)):
