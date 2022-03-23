@@ -28,7 +28,8 @@ if(isset($_POST['enviar'])):
                             $insereRegistro = "INSERT INTO livros (nome_livro, editora_livro, autor_livro, genero_livro, ano_publicacao, criado, modificado ) VALUES (
                                 '$nomeLivro','$editoraLivro','$autorLivro','$generoLivro','$anoPublicacao', '$criado', '$criado')";
                             mysqli_query($connect,$insereRegistro);
-                            
+                            $acertos = array();
+                            $acertos[] = "<ul><li class='sucesso'>Cadastro realizado com sucesso.</li><ul>";
                         else:
                             $erros[] = "<li>Campo ano de publicação não possível.</li>";
                         endif;
@@ -45,7 +46,7 @@ if(isset($_POST['enviar'])):
             $erros[] = "<li>Campo editora do livro não preeenchido.</li>";
         endif;
     else:
-        $erros[] = "<li>Campo nome do livro não preeenchido. <li>";
+        $erros[] = "<li>Campo nome do livro não preeenchido. </li>";
     endif;
 endif;
 
@@ -71,16 +72,21 @@ endif;
             <input type="text" name="ano_publicacao" class="input ano_publicacao" placeholder="Ano de Publicação">
             <input type="submit" value="CADASTRAR" class="input btn_enviar" name="enviar">
         </form>
+        <?php
+            if(!empty($erros)):
+                foreach ($erros as $erro):
+                    echo "<ul class='erro'>$erro</ul>";
+                endforeach;
+            elseif(!empty($acertos)):
+                foreach ($acertos as $acerto):
+                    echo $acerto;
+                endforeach;
+            endif;
+        ?>
     </div>
 
     <?php include_once 'rodape.php'; ?>
     </div>
-    <?php
-    if(!empty($erros)):
-        foreach ($erros as $erro):
-            echo $erro;
-        endforeach;
-    endif;
-    ?>
+    
 </body>
 </html>
