@@ -67,7 +67,7 @@ endif;
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Livraria</title>
+    <title>EDITAR REGISTRO</title>
     <link rel="stylesheet" href="../style/home.css">
 </head>
 <body>

@@ -7,13 +7,20 @@ if(!isset($_SESSION['acesso'])):
     session_destroy();
     header('Location: /index.php');
 endif;
+
+if(isset($_GET['id'])):
+    $idApagar = $_GET['id'];
+    $deletaRegistro = "DELETE FROM livros WHERE id_livros = $idApagar";
+    $resultadoDeletar = mysqli_query($connect,$deletaRegistro);
+endif;
+
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Livros</title>
+    <title>REGISTROS</title>
     <link rel="stylesheet" href="../style/home.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -51,7 +58,7 @@ endif;
                                 echo "<td>".$registros[4]."</td>";
                                 echo "<td>".$registros[5]."</td>";
                                 echo "<td class='icon'><a class='icon' href='editar.php?id=$registros[0]'><i class='material-icons'>edit</i></a></td>";
-                                echo "<td class='icon'><i class='material-icons'>delete</i></td>";
+                                echo "<td class='icon'><a class='icon' href='registro.php?id=$registros[0]'><i class='material-icons'>delete</i></a></td>";
                             echo "</tr>";
                         endforeach;
                     ?>

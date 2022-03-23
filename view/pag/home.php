@@ -13,7 +13,7 @@ endif;
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Livraria</title>
+    <title>HOME</title>
     <link rel="stylesheet" href="../style/home.css">
 </head>
 <body>
