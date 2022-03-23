@@ -15,6 +15,9 @@ a:link, a:visited, a:active {
     text-decoration: none;
     color: white;
 }
+a.icon {
+    color: black;
+}
 .cabecalho {
     grid-area: cabecalho;
     background-color: rgb(41, 41, 41);
@@ -73,7 +76,7 @@ input:focus {
     outline: none;    
 }
 input::placeholder {
-    color: rgb(41, 41, 41);
+    color: rgb(107, 106, 106);
     font-size: 14px;
 }
 .btn_enviar {
@@ -128,4 +131,10 @@ td {
     padding: 10px;
     border: 1px solid rgb(170, 170, 170);
     border-radius: 1em;
+}
+td.icon {
+    width: 30px;
+    border: none;
+    border-radius: none;
+    text-align: center;
 }

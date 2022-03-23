@@ -15,6 +15,8 @@ endif;
     <meta charset="UTF-8">
     <title>Livros</title>
     <link rel="stylesheet" href="../style/home.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 </head>
 <body>
     <div class="container grid">
@@ -22,7 +24,7 @@ endif;
 
     <div class="conteudo banner">
         <?php
-            $selectBusca = "SELECT nome_livro, editora_livro, autor_livro, genero_livro, ano_publicacao FROM livros ORDER BY nome_livro";
+            $selectBusca = "SELECT id_livros, nome_livro, editora_livro, autor_livro, genero_livro, ano_publicacao FROM livros ORDER BY nome_livro";
             $resultadoBusca = mysqli_query($connect, $selectBusca);
             
             if (mysqli_num_rows($resultadoBusca)>0):
@@ -43,11 +45,13 @@ endif;
                         endwhile;
                         foreach($arrayBusca as $registros):
                             echo "<tr>";
-                                echo "<td>".$registros[0]."</td>";
                                 echo "<td>".$registros[1]."</td>";
                                 echo "<td>".$registros[2]."</td>";
                                 echo "<td>".$registros[3]."</td>";
                                 echo "<td>".$registros[4]."</td>";
+                                echo "<td>".$registros[5]."</td>";
+                                echo "<td class='icon'><a class='icon' href='editar.php?id=$registros[0]'><i class='material-icons'>edit</i></a></td>";
+                                echo "<td class='icon'><i class='material-icons'>delete</i></td>";
                             echo "</tr>";
                         endforeach;
                     ?>
