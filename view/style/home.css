@@ -72,6 +72,21 @@ div.banner {
     border-radius: 1em;
     border: 1px solid rgb(41, 41, 41);
 }
+input[type="file"] {
+    display: none;
+}
+label {
+    box-sizing: border-box;
+    padding: 10px;
+    margin: 10px auto;
+    border-radius: 1em;
+    height: 40px;
+    width: 400px;
+    background-color: rgb(41, 41, 41);
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
 input:focus {
     outline: none;    
 }
@@ -128,7 +143,7 @@ th {
     padding: 15px;
 }
 td {
-    padding: 10px;
+    padding: 5px 10px;
     border: 1px solid rgb(170, 170, 170);
     border-radius: 1em;
 }
@@ -137,4 +152,16 @@ td.icon {
     border: none;
     border-radius: none;
     text-align: center;
+}
+td.paginacao {
+    border: none;
+    height: 40px;
+    text-align: center;
+}
+a.pag {
+    color: black;
+    padding: 5px 10px;
+    border: 1px solid rgb(170, 170, 170);
+    border-radius: 0.5em;
+    margin: 0px;
 }

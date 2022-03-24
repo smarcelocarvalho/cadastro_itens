@@ -31,10 +31,31 @@ endif;
 
     <div class="conteudo banner">
         <?php
-            $selectBusca = "SELECT id_livros, nome_livro, editora_livro, autor_livro, genero_livro, ano_publicacao FROM livros ORDER BY nome_livro";
+            // Paginação
+            // Verifica se o parametro pagina foi inicializado
+            if (isset($_GET['pagina'])):
+                $pagina = $_GET['pagina'];
+            else:
+                $pagina = 1;
+            endif;
+
+            $selectBusca = "SELECT id_livros, nome_livro, editora_livro, autor_livro, genero_livro, ano_publicacao FROM livros ORDER BY nome_livro ";
             $resultadoBusca = mysqli_query($connect, $selectBusca);
-            
-            if (mysqli_num_rows($resultadoBusca)>0):
+            $numeroDeResultados = mysqli_num_rows($resultadoBusca);
+            $registrosPorPagina = 13;
+
+            // Calculo do número de paginas totais
+            $numeroPaginas = ceil($numeroDeResultados/$registrosPorPagina);
+
+            // Calculo do inicio dos registros
+            $inicioPagina = (($registrosPorPagina*$pagina)-$registrosPorPagina);
+
+            // Select de busca de resultados por pagina
+            $selectBusca = "$selectBusca LIMIT $inicioPagina,$registrosPorPagina"; 
+            $resultadoBusca = mysqli_query($connect, $selectBusca);
+            $resultadosBuscaPagina = mysqli_num_rows($resultadoBusca);
+
+            if ($numeroDeResultados>0):
             ?>
             <div class="tabela">
                 <table class="registros">
@@ -62,11 +83,22 @@ endif;
                             echo "</tr>";
                         endforeach;
                     ?>
+                    <tr>
+                        <td colspan="5" class="paginacao">
+                            <a class="pag" href="registro.php?pagina=<?php if($pagina==1){echo $pagina;}else{echo $pagina-1;} ?>">&lt</a>
+                            <?php
+                            for($i = 1; $i < $numeroPaginas + 1 ; $i++):
+                                echo "<a class='pag' href='registro.php?pagina=$i'>$i</a>";
+                            endfor;
+                            ?>
+                            <a class="pag" href="registro.php?pagina=<?php if($pagina<$numeroPaginas){echo $pagina+1;}else{echo $pagina;} ?>">&gt</a>
+                        </td>
+                    </tr>
                 </table>
             </div>
             <?php
             else:
-                echo "Nenhum resultado encontrado.";
+                echo "<ul class='erro'><li>Nenhum registro encontrado.</li></ul>";
             endif;
         ?>
     </div>

@@ -70,6 +70,8 @@ endif;
             <input type="text" name="autor_livro" class="input autor_livro" placeholder="Autor">
             <input type="text" name="genero_livro" class="input genero_livro" placeholder="Gênero">
             <input type="text" name="ano_publicacao" class="input ano_publicacao" placeholder="Ano de Publicação (YYYY)">
+            <input type="hidden" name="MAX_FILE_SIZE" value="30000">
+            <label>ENVIAR ARQUIVO<input type="file" name="arquivo_livro" class="input arquivo_livro" accept="image/*"></label>
             <input type="submit" value="CADASTRAR" class="input btn_enviar" name="enviar">
         </form>
         <?php
