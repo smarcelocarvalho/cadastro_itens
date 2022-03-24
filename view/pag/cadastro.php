@@ -20,16 +20,58 @@ if(isset($_POST['enviar'])):
                     if(!empty($_POST['ano_publicacao'])):
                             $anoPublicacao = intval($_POST['ano_publicacao']);
                         if ($_POST['ano_publicacao'] <= date('Y') && gettype($anoPublicacao) == "integer"):
-                            $nomeLivro = $_POST['nome_livro'];
-                            $editoraLivro = $_POST['editora_livro'];
-                            $autorLivro = $_POST['autor_livro'];
-                            $generoLivro = $_POST['genero_livro'];
-                            $criado = date('Y-m-d H:i:s');
-                            $insereRegistro = "INSERT INTO livros (nome_livro, editora_livro, autor_livro, genero_livro, ano_publicacao, criado, modificado ) VALUES (
-                                '$nomeLivro','$editoraLivro','$autorLivro','$generoLivro','$anoPublicacao', '$criado', '$criado')";
-                            mysqli_query($connect,$insereRegistro);
-                            $acertos = array();
-                            $acertos[] = "<ul><li class='sucesso'>Cadastro realizado com sucesso.</li><ul>";
+
+                            // Verificação de arquivos
+                            if (empty($_FILES["arquivo_livro"]["name"])):
+                                $nomeLivro = $_POST['nome_livro'];
+                                $editoraLivro = $_POST['editora_livro'];
+                                $autorLivro = $_POST['autor_livro'];
+                                $generoLivro = $_POST['genero_livro'];
+                                $criado = date('Y-m-d H:i:s');
+                                $insereRegistro = "INSERT INTO livros (nome_livro, editora_livro, autor_livro, genero_livro, ano_publicacao, criado, modificado ) VALUES (
+                                    '$nomeLivro','$editoraLivro','$autorLivro','$generoLivro','$anoPublicacao', '$criado', '$criado')";
+                                mysqli_query($connect,$insereRegistro);
+                                $acertos = array();
+                                $acertos[] = "<ul><li class='sucesso'>Cadastro realizado com sucesso.</li><ul>";
+                            else :
+                                // Caminho para upload de arquivo
+                                $diretorioDestino = "arquivos/";
+                                $nomeArquivo = basename($_FILES["arquivo_livro"]["name"]);
+                                $nomeCompletoDestino = $diretorioDestino . $nomeArquivo;
+                                $tipoArquivo = pathinfo($nomeCompletoDestino,PATHINFO_EXTENSION);
+                                $tiposPermitidos = array('jpg','png','jpeg','gif','pdf');
+                                // Verifica se contem primeiro valor no array
+                                if (in_array($tipoArquivo, $tiposPermitidos)):
+                                    // Subir arquivo no servidor
+                                    if (move_uploaded_file($_FILES["arquivo_livro"]["tmp_name"], $nomeCompletoDestino)):
+                                        // Informações doarquivo inserido no banco
+                                        $selectInformacaoArquivo = "INSERT INTO arquivos (nome_arquivo, data_upload ) VALUES ('$nomeArquivo', NOW() )";
+                                        $resultadoInsercao = mysqli_query($connect,$selectInformacaoArquivo);
+                                        if ($resultadoInsercao):
+                                            //Cadastro livro no banco com informação do arquivo
+                                            $nomeLivro = $_POST['nome_livro'];
+                                            $editoraLivro = $_POST['editora_livro'];
+                                            $autorLivro = $_POST['autor_livro'];
+                                            $generoLivro = $_POST['genero_livro'];
+                                            $criado = date('Y-m-d H:i:s');
+                                            // Busca ID na ultima insert
+                                            $id_arquivo = mysqli_insert_id($connect);
+                                            // Inserido nome da coluna id_arquivo
+                                            $insereRegistro = "INSERT INTO livros (nome_livro, editora_livro, autor_livro, genero_livro, ano_publicacao, id_arquivo, criado, modificado ) VALUES (
+                                                '$nomeLivro','$editoraLivro','$autorLivro','$generoLivro','$anoPublicacao', '$id_arquivo', '$criado', '$criado')";
+                                            mysqli_query($connect,$insereRegistro);
+                                            $acertos = array();
+                                            $acertos[] = "Cadastro realizado, com arquivo $fileName armazenado com sucesso.";
+                                        else:
+                                            $erros[] = "Erro no armazenamento de informções do arquivo.";
+                                        endif; 
+                                    else:
+                                        $erros[] = "Erro no armazenamento fisíco do arquivo.";
+                                    endif;
+                                else:
+                                    $erros[] = "Permitido somente (JPG, JPEG, PNG, GIF, & PDF).";
+                                endif;
+                            endif;
                         else:
                             $erros[] = "<li>Campo ano de publicação não possível.</li>";
                         endif;
@@ -70,8 +112,7 @@ endif;
             <input type="text" name="autor_livro" class="input autor_livro" placeholder="Autor">
             <input type="text" name="genero_livro" class="input genero_livro" placeholder="Gênero">
             <input type="text" name="ano_publicacao" class="input ano_publicacao" placeholder="Ano de Publicação (YYYY)">
-            <input type="hidden" name="MAX_FILE_SIZE" value="30000">
-            <label>ENVIAR ARQUIVO<input type="file" name="arquivo_livro" class="input arquivo_livro" accept="image/*"></label>
+            <label>ENVIAR ARQUIVO<input type="file" enctype="multipart/form-data" name="arquivo_livro" class="input arquivo_livro"></label>
             <input type="submit" value="CADASTRAR" class="input btn_enviar" name="enviar">
         </form>
         <?php
