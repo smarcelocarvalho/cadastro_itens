@@ -35,11 +35,14 @@ if(isset($_POST['enviar'])):
                                 $acertos[] = "<ul><li class='sucesso'>Cadastro realizado com sucesso.</li><ul>";
                             else :
                                 // Caminho para upload de arquivo
-                                $diretorioDestino = "arquivos/";
+                                $diretorioDestino = dirname(__FILE__,3)."\arquivos\\";
                                 $nomeArquivo = basename($_FILES["arquivo_livro"]["name"]);
-                                $nomeCompletoDestino = $diretorioDestino . $nomeArquivo;
+                                $nomeCompletoDestino = $diretorioDestino.$nomeArquivo;
                                 $tipoArquivo = pathinfo($nomeCompletoDestino,PATHINFO_EXTENSION);
                                 $tiposPermitidos = array('jpg','png','jpeg','gif','pdf');
+                                $nomeArquivo = "file".uniqid();
+                                $nomeCompletoDestino = $diretorioDestino.$nomeArquivo.".".$tipoArquivo;
+                                
                                 // Verifica se contem primeiro valor no array
                                 if (in_array($tipoArquivo, $tiposPermitidos)):
                                     // Subir arquivo no servidor
@@ -61,7 +64,7 @@ if(isset($_POST['enviar'])):
                                                 '$nomeLivro','$editoraLivro','$autorLivro','$generoLivro','$anoPublicacao', '$id_arquivo', '$criado', '$criado')";
                                             mysqli_query($connect,$insereRegistro);
                                             $acertos = array();
-                                            $acertos[] = "Cadastro realizado, com arquivo $fileName armazenado com sucesso.";
+                                            $acertos[] = "<ul><li class='sucesso'>Cadastro realizado, com arquivo $nomeArquivo armazenado com sucesso.</li><ul>";
                                         else:
                                             $erros[] = "Erro no armazenamento de informções do arquivo.";
                                         endif; 
@@ -106,13 +109,13 @@ endif;
     <?php include_once 'cabecalho.php'; ?>
 
     <div class="conteudo banner">
-        <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST" class="formulario">
+        <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST" class="formulario" enctype="multipart/form-data">
             <input type="text" name="nome_livro" class="input nome_livro" placeholder="Título">
             <input type="text" name="editora_livro" class="input editora_livro" placeholder="Editora">
             <input type="text" name="autor_livro" class="input autor_livro" placeholder="Autor">
             <input type="text" name="genero_livro" class="input genero_livro" placeholder="Gênero">
             <input type="text" name="ano_publicacao" class="input ano_publicacao" placeholder="Ano de Publicação (YYYY)">
-            <label>ENVIAR ARQUIVO<input type="file" enctype="multipart/form-data" name="arquivo_livro" class="input arquivo_livro"></label>
+            <label>ENVIAR ARQUIVO<input type="file" name="arquivo_livro" class="input arquivo_livro"></label>
             <input type="submit" value="CADASTRAR" class="input btn_enviar" name="enviar">
         </form>
         <?php
