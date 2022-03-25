@@ -22,26 +22,17 @@ if(isset($_POST['enviar'])):
                         if ($_POST['ano_publicacao'] <= date('Y') && gettype($anoPublicacao) == "integer"):
 
                             // Verificação de arquivos
-                            if (empty($_FILES["arquivo_livro"]["name"])):
-                                $nomeLivro = $_POST['nome_livro'];
-                                $editoraLivro = $_POST['editora_livro'];
-                                $autorLivro = $_POST['autor_livro'];
-                                $generoLivro = $_POST['genero_livro'];
-                                $criado = date('Y-m-d H:i:s');
-                                $insereRegistro = "INSERT INTO livros (nome_livro, editora_livro, autor_livro, genero_livro, ano_publicacao, criado, modificado ) VALUES (
-                                    '$nomeLivro','$editoraLivro','$autorLivro','$generoLivro','$anoPublicacao', '$criado', '$criado')";
-                                mysqli_query($connect,$insereRegistro);
-                                $acertos = array();
-                                $acertos[] = "<ul><li class='sucesso'>Cadastro realizado com sucesso.</li><ul>";
-                            else :
+                            if (!empty($_FILES["arquivo_livro"]["name"])):
+                                
                                 // Caminho para upload de arquivo
-                                $diretorioDestino = dirname(__FILE__,3)."\arquivos\\";
+                                // Nome original do arquivo para buscar extensão
                                 $nomeArquivo = basename($_FILES["arquivo_livro"]["name"]);
-                                $nomeCompletoDestino = $diretorioDestino.$nomeArquivo;
-                                $tipoArquivo = pathinfo($nomeCompletoDestino,PATHINFO_EXTENSION);
+                                $tipoArquivo = pathinfo($nomeArquivo,PATHINFO_EXTENSION);
                                 $tiposPermitidos = array('jpg','png','jpeg','gif','pdf');
-                                $nomeArquivo = "file".uniqid();
-                                $nomeCompletoDestino = $diretorioDestino.$nomeArquivo.".".$tipoArquivo;
+                                // Renomeia arquivo para evitar conflito
+                                $nomeArquivo = "file".uniqid().".".$tipoArquivo;
+                                $diretorioDestino = dirname(__FILE__,3)."\arquivos\\";
+                                $nomeCompletoDestino = $diretorioDestino.$nomeArquivo;
                                 
                                 // Verifica se contem primeiro valor no array
                                 if (in_array($tipoArquivo, $tiposPermitidos)):
@@ -66,14 +57,16 @@ if(isset($_POST['enviar'])):
                                             $acertos = array();
                                             $acertos[] = "<ul><li class='sucesso'>Cadastro realizado, com arquivo $nomeArquivo armazenado com sucesso.</li><ul>";
                                         else:
-                                            $erros[] = "Erro no armazenamento de informções do arquivo.";
-                                        endif; 
+                                            $erros[] = "<li>Erro no armazenamento de informações do arquivo.</li>";
+                                        endif;
                                     else:
-                                        $erros[] = "Erro no armazenamento fisíco do arquivo.";
+                                        $erros[] = "<li>Erro no armazenamento fisíco do arquivo.</li>";
                                     endif;
                                 else:
-                                    $erros[] = "Permitido somente (JPG, JPEG, PNG, GIF, & PDF).";
+                                    $erros[] = "<li>Permitido somente (JPG, JPEG, PNG, GIF, & PDF).</li>";
                                 endif;
+                            else:
+                                $erros[] = "<li>Obrigatório inserir arquivo.</li>";
                             endif;
                         else:
                             $erros[] = "<li>Campo ano de publicação não possível.</li>";

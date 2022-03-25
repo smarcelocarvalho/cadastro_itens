@@ -10,8 +10,22 @@ endif;
 
 if(isset($_GET['id'])):
     $idApagar = $_GET['id'];
+    // Busca id arquivo
+    $selectLivro = "SELECT * FROM livros WHERE id_livros = $idApagar";
+    $arrayLivro = mysqli_fetch_array(mysqli_query($connect,$selectLivro));
+    $idArquivo = $arrayLivro['id_arquivo'];
+    // Altera status arquivo na base
+    $arrayArquivo = mysqli_fetch_array(mysqli_query($connect,"SELECT * FROM arquivos WHERE id_arquivo = '$idArquivo'"));
+    $updateArquivo = mysqli_query("UPDATE arquivos SET status = '0' WHERE id_arquivo = '$idArquivo' ");
+    // Apaga registro na base
     $deletaRegistro = "DELETE FROM livros WHERE id_livros = $idApagar";
-    $resultadoDeletar = mysqli_query($connect,$deletaRegistro);
+    mysqli_query($connect,$deletaRegistro);
+
+    $diretorioDestino = dirname(__FILE__,3)."\arquivos\\";
+    $nomeArquivo = $arrayArquivo['nome_arquivo'];
+    // Apaga arquivo
+    unlink($diretorioDestino.$nomeArquivo);
+    header("Location: registro.php");
 endif;
 
 ?>
