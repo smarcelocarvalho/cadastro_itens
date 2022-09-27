@@ -1,9 +1,8 @@
 <?php
     require_once 'model/db_connect.php';
 
-    //$idFixo = 1;
     //$loginFixo = "teste";
-    //$senhaFixo = 123;
+    //$senhaFixo = "teste";
     
     session_start();
     $_SESSION['acesso'] = NULL;
